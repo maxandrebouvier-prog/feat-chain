@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>feat. — la chaîne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+html,body{margin:0;padding:0;background:#F6F4EF;}
+:root{
+  --paper:#F6F4EF; --ink:#15141A; --muted:#86838C; --line:#E3E0D8;
+  --card:#FFFFFF; --electric:#4127E0; --electric-soft:#EBE8FD;
+  --good:#1C7C53; --bad:#D23A2B;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;}
+body{font-family:var(--body); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.45;}
+.fc-shell{max-width:600px; margin:0 auto; padding:22px 20px 56px; min-height:100vh; display:flex; flex-direction:column;}
+.fc-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px;}
+.fc-brand{background:none; border:none; cursor:pointer; padding:0; display:flex; align-items:baseline; gap:9px; color:var(--ink);}
+.fc-brand-mark{font-family:var(--disp); font-weight:700; font-size:24px; letter-spacing:-.02em;}
+.fc-brand-sub{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.18em; color:var(--muted);}
+.fc-quit{background:none; border:none; cursor:pointer; font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted);}
+.fc-quit:hover{color:var(--ink);}
+.fc-home{display:flex; flex-direction:column;}
+.fc-title{font-family:var(--disp); font-weight:600; font-size:38px; line-height:1.05; letter-spacing:-.03em; margin:14px 0 26px;}
+.fc-title em{font-style:italic; color:var(--electric);}
+.fc-rules{list-style:none; padding:0; margin:0 0 28px; border-top:1px solid var(--line);}
+.fc-rules li{display:flex; gap:14px; align-items:flex-start; padding:13px 2px; border-bottom:1px solid var(--line); font-size:14.5px; color:#33323A;}
+.fc-rn{font-family:var(--mono); font-size:12px; color:var(--electric); font-weight:700; padding-top:2px; flex-shrink:0;}
+.fc-section-label{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--muted); margin:18px 0 11px;}
+.fc-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.fc-tile{display:flex; flex-direction:column; align-items:flex-start; gap:3px; text-align:left; padding:16px; background:var(--card); border:1px solid var(--line); border-radius:2px; cursor:pointer; transition:border-color .15s, transform .08s;}
+.fc-tile:hover{border-color:var(--electric);}
+.fc-tile:active{transform:translateY(1px);}
+.fc-tile-t{font-family:var(--disp); font-weight:600; font-size:17px; letter-spacing:-.01em;}
+.fc-tile-d{font-size:12.5px; color:var(--muted);}
+.fc-tile-best{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--electric); margin-top:5px;}
+.fc-note{font-size:12px; color:var(--muted); margin-top:22px; line-height:1.5; font-family:var(--mono);}
+.fc-btn{font-family:var(--body); font-weight:600; font-size:15px; padding:13px 22px; border-radius:2px; border:1px solid var(--ink); cursor:pointer; transition:transform .08s, background .15s, color .15s; letter-spacing:-.01em;}
+.fc-btn:active{transform:translateY(1px);}
+.fc-btn:disabled{opacity:.4; cursor:not-allowed;}
+.fc-btn-primary{background:var(--electric); border-color:var(--electric); color:#fff;}
+.fc-btn-primary:hover:not(:disabled){background:#3219c4; border-color:#3219c4;}
+.fc-btn-dark{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.fc-block{width:100%;}
+.fc-lobby{display:flex; flex-direction:column; gap:20px; margin-top:4px;}
+.fc-field{display:flex; flex-direction:column; gap:8px;}
+.fc-field span{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted);}
+.fc-input{font-family:var(--body); font-size:16px; padding:13px 15px; border:1px solid var(--line); border-radius:2px; background:var(--card); color:var(--ink); width:100%; outline:none;}
+.fc-input:focus{border-color:var(--electric); box-shadow:0 0 0 3px var(--electric-soft);}
+.fc-segment{display:flex; gap:8px;}
+.fc-seg{flex:1; font-family:var(--mono); font-weight:700; font-size:15px; padding:12px; border:1px solid var(--line); background:var(--card); border-radius:2px; cursor:pointer; color:var(--muted);}
+.fc-seg-on{border-color:var(--electric); color:var(--electric); background:var(--electric-soft);}
+.fc-prow-edit{display:flex; gap:8px; align-items:center;}
+.fc-prow-edit .fc-input{flex:1;}
+.fc-iconbtn{min-width:44px; height:44px; flex-shrink:0; border:1px solid var(--line); background:var(--card); border-radius:2px; cursor:pointer; font-size:15px; color:var(--muted); font-family:var(--mono);}
+.fc-iconbtn:hover{border-color:var(--electric); color:var(--electric);}
+.fc-or{display:flex; align-items:center; gap:12px; color:var(--muted); font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em;}
+.fc-or::before,.fc-or::after{content:""; height:1px; background:var(--line); flex:1;}
+.fc-join{display:flex; gap:10px;}
+.fc-code-input{font-family:var(--mono); font-weight:700; letter-spacing:.32em; text-transform:uppercase; text-align:center; flex:1;}
+.fc-bigcode{font-family:var(--mono); font-weight:700; font-size:48px; letter-spacing:.16em; text-align:center; margin:2px 0 6px;}
+.fc-wait-label{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--muted); margin:6px 0 4px; text-align:center;}
+.fc-wait-sub{color:var(--muted); font-size:13.5px; text-align:center; font-family:var(--mono);}
+.fc-players{display:flex; flex-direction:column; border:1px solid var(--line); border-radius:2px; background:var(--card);}
+.fc-prow{display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border-bottom:1px solid var(--line);}
+.fc-prow:last-child{border-bottom:none;}
+.fc-pname{font-family:var(--disp); font-weight:500; font-size:16px;}
+.fc-ptags em{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--electric); font-style:normal; margin-left:8px;}
+.fc-meta{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:center;}
+.fc-back{align-self:flex-start; background:none; border:none; cursor:pointer; color:var(--muted); font-family:var(--mono); font-size:12px;}
+.fc-back:hover{color:var(--ink);}
+.fc-err{color:var(--bad); font-size:13px; margin:2px 0 0; font-weight:500;}
+.fc-game{display:flex; flex-direction:column;}
+.fc-statusbar{display:flex; align-items:center; gap:12px; padding-bottom:13px; margin-bottom:14px; border-bottom:1px solid var(--line);}
+.fc-status-left{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);}
+.fc-turn{margin-left:auto; font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted);}
+.fc-turn-mine{color:var(--electric); font-weight:700;}
+.fc-timer{font-family:var(--mono); font-weight:700; font-size:13px; color:var(--ink); min-width:44px; text-align:right; margin-left:auto;}
+.fc-turn + .fc-timer{margin-left:0;}
+.fc-timer-low{color:var(--bad);}
+.fc-scoreboard{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px;}
+.fc-chip{display:flex; align-items:center; gap:7px; padding:6px 10px; border:1px solid var(--line); border-radius:20px; background:var(--card); font-size:12.5px;}
+.fc-chip-active{border-color:var(--electric); box-shadow:0 0 0 2px var(--electric-soft);}
+.fc-chip-out{opacity:.4; text-decoration:line-through;}
+.fc-chip-name{font-weight:500;}
+.fc-chip-wins{font-size:9px; color:var(--electric); letter-spacing:1px;}
+.fc-chain{display:flex; flex-direction:column; min-height:90px;}
+.fc-empty{color:var(--muted); font-size:14px; text-align:center; padding:30px 0; font-family:var(--mono);}
+.fc-link-wrap{display:flex; flex-direction:column;}
+.fc-connector{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:9px 0 9px 18px; margin-left:8px; border-left:1px solid var(--line);}
+.fc-feat{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--electric); font-weight:700; flex-shrink:0;}
+.fc-track{font-family:var(--mono); font-size:12px; color:var(--muted);}
+.fc-src{font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); border:1px solid var(--line); padding:2px 6px; border-radius:10px; white-space:nowrap;}
+.fc-link{display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--card); border:1px solid var(--line); border-radius:2px; animation:fcin .3s ease both;}
+.fc-link-latest{border-color:var(--electric); box-shadow:0 0 0 3px var(--electric-soft);}
+.fc-link-given{background:#FBFAFF; border-style:dashed;}
+.fc-link-who{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); flex-shrink:0; width:62px;}
+.fc-link-artist{font-family:var(--disp); font-weight:600; font-size:20px; letter-spacing:-.02em;}
+@keyframes fcin{from{opacity:0; transform:translateY(7px);}to{opacity:1; transform:none;}}
+.fc-thinking{display:flex; align-items:center; gap:8px; padding:16px 4px; color:var(--muted); font-family:var(--mono); font-size:12px;}
+.fc-dot{width:6px; height:6px; border-radius:50%; background:var(--electric); animation:fcblink 1.1s infinite both;}
+.fc-dot:nth-child(2){animation-delay:.18s;}
+.fc-dot:nth-child(3){animation-delay:.36s;}
+@keyframes fcblink{0%,80%,100%{opacity:.2;}40%{opacity:1;}}
+.fc-input-area{margin-top:18px; padding-top:16px; border-top:1px solid var(--line);}
+.fc-prompt{font-size:13px; color:var(--muted); margin-bottom:10px; font-family:var(--mono);}
+.fc-input-row{display:flex; gap:10px;}
+.fc-input-main{flex:1;}
+.fc-flash{color:var(--bad); font-size:13px; margin:8px 0 0; font-family:var(--mono);}
+.fc-result{text-align:center; padding:32px 22px; margin-top:20px; border:1px solid var(--line); border-radius:2px; background:var(--card); animation:fcin .35s ease both;}
+.fc-result-tag{font-family:var(--disp); font-size:22px; margin-bottom:4px;}
+.fc-result-win .fc-result-tag{color:var(--good);}
+.fc-result-lose .fc-result-tag{color:var(--bad);}
+.fc-result-h{font-family:var(--disp); font-weight:700; font-size:27px; letter-spacing:-.02em; margin:0 0 10px;}
+.fc-result-win .fc-result-h{color:var(--good);}
+.fc-result-lose .fc-result-h{color:var(--bad);}
+.fc-result-reason{color:#46454D; font-size:14px; margin:0 auto 20px; max-width:400px;}
+.fc-result-solo{border-color:var(--electric);}
+.fc-record{display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:#fff; background:var(--electric); padding:5px 10px; border-radius:2px; margin-bottom:12px;}
+.fc-result-score{font-family:var(--disp); font-weight:700; font-size:66px; line-height:1; letter-spacing:-.04em; color:var(--electric);}
+.fc-result-scorelabel{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin:8px 0 16px;}
+.fc-publish{display:flex; flex-direction:column; gap:9px; max-width:320px; margin:0 auto 18px;}
+.fc-published{color:var(--good); font-family:var(--mono); font-size:13px; margin:6px 0 18px;}
+.fc-standings{display:flex; flex-direction:column; gap:1px; margin:0 0 20px; text-align:left;}
+.fc-srow{display:flex; align-items:center; gap:12px; padding:9px 4px; border-bottom:1px solid var(--line);}
+.fc-srank{font-family:var(--mono); font-weight:700; color:var(--electric); width:18px;}
+.fc-sname{font-family:var(--disp); font-weight:500; flex:1;}
+.fc-swins{font-family:var(--mono); font-size:12px; color:var(--muted);}
+.fc-board{display:flex; flex-direction:column;}
+.fc-board-h{font-family:var(--disp); font-weight:700; font-size:30px; letter-spacing:-.02em; margin:6px 0 18px;}
+.fc-tabs{display:flex; gap:8px; margin-bottom:18px;}
+.fc-tab{flex:1; font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.06em; padding:11px 6px; border:1px solid var(--line); background:var(--card); border-radius:2px; cursor:pointer; color:var(--muted);}
+.fc-tab-on{border-color:var(--electric); color:var(--electric); background:var(--electric-soft);}
+.fc-lb{display:flex; flex-direction:column;}
+.fc-lbrow{display:flex; align-items:center; gap:14px; padding:13px 6px; border-bottom:1px solid var(--line);}
+.fc-lbrank{font-family:var(--mono); font-weight:700; color:var(--muted); width:24px;}
+.fc-lbrow-top .fc-lbrank{color:var(--electric);}
+.fc-lbname{font-family:var(--disp); font-weight:500; font-size:17px; flex:1;}
+.fc-lbscore{font-family:var(--mono); font-weight:700; font-size:17px;}
+@media (max-width:480px){ .fc-title{font-size:31px;} .fc-bigcode{font-size:40px;} .fc-link-artist{font-size:18px;} .fc-grid{grid-template-columns:1fr;} }
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important;}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/mqtt@5/dist/mqtt.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+const TURN_SECONDS = 30;
+const CHRONO_SECONDS = 120;
+const MAX_PLAYERS = 6;
+const MB = "https://musicbrainz.org/ws/2/";
+const BROKER = "wss://broker.emqx.io:8084/mqtt";
+const TOPIC = (code) => "featchain/v2/" + code;
+
+const DAILY_POOL = ["Drake","Rihanna","Jay-Z","Snoop Dogg","Nicki Minaj","Future","Travis Scott","Beyoncé","Kanye West","Eminem","Pharrell Williams","Calvin Harris","David Guetta","Lil Wayne","DJ Khaled","Cardi B","Post Malone","The Weeknd","Ariana Grande","Pitbull","Chris Brown","Mariah Carey","Pusha T","Quavo","21 Savage"];
+
+const norm = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
+const strip = (s) => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const todayKey = () => new Date().toISOString().slice(0, 10);
+const CODE_AL = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const genCode = (n = 5) => { let s = ""; for (let i = 0; i < n; i++) s += CODE_AL[Math.floor(Math.random() * CODE_AL.length)]; return s; };
+function dailyArtist() { const k = todayKey(); let h = 0; for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0; return DAILY_POOL[h % DAILY_POOL.length]; }
+const isSoloLike = (m) => m === "solo" || m === "daily" || m === "chrono";
+
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const loadBest = (kind) => lsGet("feat-best-" + kind, 0);
+const saveBest = (kind, n) => lsSet("feat-best-" + kind, n);
+const lbGet = (cat) => { const r = lsGet("feat-lb:" + cat, []); return Array.isArray(r) ? r : []; };
+const lbAdd = (cat, entry) => { const list = lbGet(cat); list.push(entry); list.sort((a, b) => b.score - a.score); const top = list.slice(0, 20); lsSet("feat-lb:" + cat, top); return top; };
+
+/* ---------- MusicBrainz ---------- */
+async function mbFetch(path) {
+  const res = await fetch(MB + path, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error("mb " + res.status);
+  return res.json();
+}
+async function mbVerify(a, b) {
+  const q = encodeURIComponent(`artistname:"${a}" AND artistname:"${b}"`);
+  const data = await mbFetch(`recording?query=${q}&fmt=json&limit=10`);
+  const recs = data.recordings || [];
+  const na = strip(a), nb = strip(b);
+  let best = null;
+  for (const r of recs) {
+    const credits = (r["artist-credit"] || []).map((c) => strip(c.name || (c.artist && c.artist.name) || "")).join(" ");
+    if (credits.includes(na) && credits.includes(nb)) { best = r; break; }
+    if (!best && (r.score || 0) >= 92) best = r;
+  }
+  if (!best) return null;
+  const year = (best["first-release-date"] || "").slice(0, 4);
+  return { track: best.title + (year ? ` — ${year}` : "") };
+}
+async function verifyFeat(a, b) {
+  try {
+    const mb = await mbVerify(a, b);
+    if (mb) return { ok: true, valid: true, track: mb.track, source: "MusicBrainz" };
+    return { ok: true, valid: false, track: "", source: "MusicBrainz", reason: "aucun morceau commun trouvé dans la base" };
+  } catch (e) { return { ok: false }; }
+}
+async function mbArtistId(name) {
+  const q = encodeURIComponent(`artist:"${name}"`);
+  const data = await mbFetch(`artist?query=${q}&fmt=json&limit=5`);
+  const arr = data.artists || [];
+  return arr.length ? arr[0].id : null;
+}
+async function botPick(prev, used) {
+  const id = await mbArtistId(prev);
+  if (!id) return null;
+  const data = await mbFetch(`recording?artist=${id}&inc=artist-credits&fmt=json&limit=100`);
+  const recs = data.recordings || [];
+  const np = strip(prev);
+  const counts = {}, tracks = {};
+  for (const r of recs) {
+    const credits = r["artist-credit"] || [];
+    if (credits.length < 2) continue;
+    for (const c of credits) {
+      const nm = c.name || (c.artist && c.artist.name) || "";
+      const s = strip(nm);
+      if (!s || s === np || used.includes(s)) continue;
+      counts[nm] = (counts[nm] || 0) + 1;
+      if (!tracks[nm]) { const y = (r["first-release-date"] || "").slice(0, 4); tracks[nm] = r.title + (y ? ` — ${y}` : ""); }
+    }
+  }
+  const names = Object.keys(counts);
+  if (!names.length) return null;
+  names.sort((x, y) => counts[y] - counts[x]);
+  const top = names.slice(0, 5);
+  return { artist: top[Math.floor(Math.random() * top.length)], track: tracks[top[0]] };
+}
+
+/* ---------- tours / élimination (réutilisé local + online) ---------- */
+function nextAliveId(order, players, fromId) {
+  const alive = (id) => players.find((p) => p.id === id)?.alive;
+  const i = order.indexOf(fromId);
+  for (let k = 1; k <= order.length; k++) { const cand = order[(i + k) % order.length]; if (alive(cand)) return cand; }
+  return null;
+}
+function eliminateGame(g, who, reason) {
+  const players = g.players.map((p) => (p.id === who ? { ...p, alive: false } : p));
+  const aliveIds = players.filter((p) => p.alive).map((p) => p.id);
+  if (aliveIds.length <= 1) {
+    const winner = aliveIds[0] || null;
+    const withWin = players.map((p) => (p.id === winner ? { ...p, wins: p.wins + 1 } : p));
+    const champ = withWin.find((p) => p.id === winner);
+    const matchOver = champ && champ.wins >= g.roundsToWin;
+    return { ...g, players: withWin, roundWinner: winner, status: matchOver ? "matchover" : "roundover", matchWinner: matchOver ? winner : null, reason };
+  }
+  return { ...g, players, turnId: nextAliveId(g.order, players, who), reason };
+}
+
+/* ============================================================ */
+function App() {
+  const [screen, setScreen] = useState("home");
+  const [mode, setMode] = useState(null);
+
+  // setup local
+  const [names, setNames] = useState(["", ""]);
+  const [roundsToWin, setRoundsToWin] = useState(3);
+
+  const [local, setLocal] = useState(null);
+  const [bot, setBot] = useState(null);
+  const [solo, setSolo] = useState(null);
+  const [bests, setBests] = useState({ solo: loadBest("solo"), chrono: loadBest("chrono") });
+  const [soloRecord, setSoloRecord] = useState(false);
+
+  // online
+  const [room, setRoom] = useState(null);
+  const [onlineName, setOnlineName] = useState(lsGet("feat-myname", ""));
+  const [joinCode, setJoinCode] = useState("");
+  const [lobbyErr, setLobbyErr] = useState("");
+  const [netStatus, setNetStatus] = useState(""); // 'connecting' | ''
+
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const [flash, setFlash] = useState("");
+  const [seconds, setSeconds] = useState(null);
+  const [chronoLeft, setChronoLeft] = useState(null);
+
+  const botRunning = useRef(false);
+  const bottomRef = useRef(null);
+  const netRef = useRef({ role: null, client: null, myId: null, code: null });
+  const roomRef = useRef(null);
+  useEffect(() => { roomRef.current = room; }, [room]);
+
+  const myId = netRef.current.myId;
+  const chain = mode === "online" ? room?.chain : mode === "local" ? local?.chain : mode === "bot" ? bot?.chain : isSoloLike(mode) ? solo?.chain : null;
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [chain?.length]);
+
+  const isMyTurnOnline = mode === "online" && room?.status === "playing" && room?.turnId === netRef.current.myId;
+  const isLocalTurn = mode === "local" && local?.status === "playing";
+  const isHumanTurnBot = mode === "bot" && bot?.turn === "human" && bot?.status === "playing";
+  const isHumanTurnSolo = isSoloLike(mode) && solo?.status === "playing";
+  const myTurn = isMyTurnOnline || isLocalTurn || isHumanTurnBot || isHumanTurnSolo;
+
+  /* ----- réseau : relais MQTT (broker public) ----- */
+  // L'hôte est la source de vérité : il publie l'état du salon en message "retenu"
+  // (retained) pour que tout nouveau joueur le reçoive instantanément.
+  function publishState(r) {
+    const c = netRef.current.client;
+    if (c && netRef.current.role === "host" && netRef.current.code) {
+      try { c.publish(TOPIC(netRef.current.code) + "/state", JSON.stringify(r), { retain: true, qos: 0 }); } catch (e) {}
+    }
+  }
+  function applyRoom(next) { setRoom(next); roomRef.current = next; publishState(next); }
+  function sendNote(pid, text) {
+    if (pid === netRef.current.myId) { setErr(text); return; }
+    const c = netRef.current.client;
+    if (c && netRef.current.code) { try { c.publish(TOPIC(netRef.current.code) + "/note", JSON.stringify({ to: pid, text }), { qos: 0 }); } catch (e) {} }
+  }
+  function cleanupNet() {
+    const n = netRef.current;
+    try {
+      if (n.client) {
+        if (n.role === "host" && n.code) { try { n.client.publish(TOPIC(n.code) + "/state", "", { retain: true }); } catch (e) {} } // libère le code
+        n.client.end(true);
+      }
+    } catch (e) {}
+    netRef.current = { role: null, client: null, myId: null, code: null };
+  }
+
+  async function hostProcessMove(playerId, rawName) {
+    const nm = (rawName || "").trim();
+    let r = roomRef.current;
+    if (!nm || !r || r.status !== "playing" || r.turnId !== playerId) return;
+    const opening = r.chain.length === 0;
+    if (opening) {
+      const next = { ...r, chain: [{ artist: nm, by: playerId }], used: [norm(nm)], turnId: nextAliveId(r.order, r.players, playerId), turnStartedAt: Date.now() };
+      applyRoom(next); return;
+    }
+    if (r.used.includes(norm(nm))) { applyRoom({ ...eliminateGame(r, playerId, `${nm} a déjà été cité`), turnStartedAt: Date.now() }); return; }
+    const last = r.chain[r.chain.length - 1].artist;
+    const v = await verifyFeat(last, nm);
+    r = roomRef.current;
+    if (!r || r.status !== "playing" || r.turnId !== playerId) return;
+    if (!v.ok) { sendNote(playerId, "MusicBrainz indisponible, réessaie."); return; }
+    if (!v.valid) applyRoom({ ...eliminateGame(r, playerId, `pas de feat entre ${last} et ${nm}`), turnStartedAt: Date.now() });
+    else applyRoom({ ...r, chain: [...r.chain, { artist: nm, track: v.track, source: v.source, by: playerId }], used: [...r.used, norm(nm)], turnId: nextAliveId(r.order, r.players, playerId), turnStartedAt: Date.now() });
+  }
+
+  // Reçu par l'hôte sur le topic /act
+  function hostHandleAction(d) {
+    const r = roomRef.current;
+    if (!d || !r) return;
+    if (d.type === "join") {
+      if (r.status !== "lobby") { sendNote(d.id, "La partie a déjà commencé."); return; }
+      if (r.players.some((p) => p.id === d.id)) { publishState(r); return; }
+      if (r.players.length >= MAX_PLAYERS) { sendNote(d.id, "Salon plein."); return; }
+      applyRoom({ ...r, players: [...r.players, { id: d.id, name: (d.name || "Joueur").slice(0, 18), alive: true, wins: 0 }], order: [...r.order, d.id] });
+    } else if (d.type === "move") {
+      hostProcessMove(d.id, d.name);
+    }
+  }
+
+  function createOnline() {
+    setLobbyErr("");
+    if (typeof mqtt === "undefined") { setLobbyErr("Module réseau indisponible — vérifie ta connexion internet."); return; }
+    const code = genCode();
+    const myPid = "h_" + Math.random().toString(36).slice(2, 8);
+    const client = mqtt.connect(BROKER, { clientId: "fc_" + Math.random().toString(36).slice(2, 12), clean: true, connectTimeout: 8000, reconnectPeriod: 4000, keepalive: 30 });
+    netRef.current = { role: "host", client, myId: myPid, code };
+    setNetStatus("connecting");
+    let connected = false;
+    client.on("connect", () => {
+      connected = true;
+      client.subscribe(TOPIC(code) + "/act", { qos: 0 }, () => {});
+      const me = { id: myPid, name: (onlineName || "Hôte").slice(0, 18), alive: true, wins: 0 };
+      const r = { code, hostId: myPid, players: [me], order: [myPid], roundsToWin, round: 1, chain: [], used: [], turnId: null, status: "lobby", roundWinner: null, matchWinner: null, reason: "", turnStartedAt: null };
+      setRoom(r); roomRef.current = r;
+      publishState(r);
+      setNetStatus(""); setMode("online"); setScreen("onlobby");
+    });
+    client.on("message", (topic, payload) => {
+      try { hostHandleAction(JSON.parse(payload.toString())); } catch (e) {}
+    });
+    client.on("error", () => { if (!connected) { setNetStatus(""); setLobbyErr("Connexion au serveur de jeu impossible. Réessaie dans un instant."); } });
+    setTimeout(() => { if (!connected) { setNetStatus(""); setLobbyErr("Le serveur de jeu ne répond pas. Réessaie dans un instant."); cleanupNet(); } }, 10000);
+  }
+
+  function joinOnline() {
+    setLobbyErr("");
+    const code = joinCode.trim().toUpperCase();
+    if (code.length < 4) { setLobbyErr("Entre le code du salon."); return; }
+    if (typeof mqtt === "undefined") { setLobbyErr("Module réseau indisponible — vérifie ta connexion internet."); return; }
+    const myPid = "p_" + Math.random().toString(36).slice(2, 8);
+    const client = mqtt.connect(BROKER, { clientId: "fc_" + Math.random().toString(36).slice(2, 12), clean: true, connectTimeout: 8000, reconnectPeriod: 4000, keepalive: 30 });
+    netRef.current = { role: "join", client, myId: myPid, code };
+    setNetStatus("connecting");
+    let connected = false, gotState = false;
+    client.on("connect", () => {
+      connected = true;
+      client.subscribe([TOPIC(code) + "/state", TOPIC(code) + "/note"], { qos: 0 }, () => {
+        client.publish(TOPIC(code) + "/act", JSON.stringify({ type: "join", id: myPid, name: (onlineName || "Joueur").slice(0, 18) }), { qos: 0 });
+      });
+      setMode("online"); setScreen("onlobby");
+    });
+    client.on("message", (topic, payload) => {
+      const s = payload.toString();
+      if (topic.endsWith("/state")) {
+        if (!s) { setErr("L'hôte a fermé le salon."); return; }
+        try { const r = JSON.parse(s); gotState = true; setRoom(r); roomRef.current = r; setNetStatus(""); } catch (e) {}
+      } else if (topic.endsWith("/note")) {
+        try { const n = JSON.parse(s); if (n.to === myPid) { setLobbyErr(n.text); setErr(n.text); } } catch (e) {}
+      }
+    });
+    client.on("error", () => { if (!connected) { setNetStatus(""); setLobbyErr("Connexion au serveur de jeu impossible."); } });
+    setTimeout(() => {
+      if (!connected) { setNetStatus(""); setLobbyErr("Le serveur de jeu ne répond pas. Réessaie."); cleanupNet(); }
+      else if (!gotState) { setNetStatus(""); setLobbyErr("Aucun salon avec ce code (ou l'hôte est hors-ligne)."); cleanupNet(); }
+    }, 9000);
+  }
+
+  function startMatchOnline() {
+    const r = roomRef.current;
+    if (!r || r.hostId !== netRef.current.myId || r.players.length < 2) return;
+    applyRoom({ ...r, status: "playing", chain: [], used: [], players: r.players.map((p) => ({ ...p, alive: true })), turnId: r.order[0], turnStartedAt: Date.now(), roundWinner: null, reason: "" });
+  }
+  function nextRoundOnline() {
+    const r = roomRef.current;
+    if (!r || r.hostId !== netRef.current.myId) return;
+    applyRoom({ ...r, status: "playing", round: r.round + 1, chain: [], used: [], players: r.players.map((p) => ({ ...p, alive: true })), turnId: r.roundWinner || r.order[0], turnStartedAt: Date.now(), roundWinner: null, reason: "" });
+  }
+
+  /* online : passage lobby -> jeu */
+  useEffect(() => {
+    if (mode === "online" && screen === "onlobby" && room && room.status !== "lobby") setScreen("game");
+  }, [mode, screen, room?.status]);
+
+  /* ----- minuteurs ----- */
+  useEffect(() => {
+    if (mode !== "online" || room?.status !== "playing" || !room?.turnStartedAt) { if (mode !== "online") return; setSeconds(null); return; }
+    let fired = false;
+    const tick = () => {
+      const rem = Math.ceil(TURN_SECONDS - (Date.now() - room.turnStartedAt) / 1000);
+      setSeconds(rem);
+      if (rem <= 0 && netRef.current.role === "host" && !fired) {
+        fired = true;
+        const r = roomRef.current;
+        if (r && r.status === "playing") applyRoom({ ...eliminateGame(r, r.turnId, "temps écoulé — a séché"), turnStartedAt: Date.now() });
+      }
+    };
+    tick();
+    const iv = setInterval(tick, 250);
+    return () => clearInterval(iv);
+  }, [mode, room?.status, room?.turnStartedAt]);
+
+  useEffect(() => {
+    if (mode === "online" || mode === "chrono") return;
+    if (!myTurn) { setSeconds(null); return; }
+    setSeconds(TURN_SECONDS);
+    const iv = setInterval(() => setSeconds((s) => (s === null ? null : s - 1)), 1000);
+    return () => clearInterval(iv);
+  }, [myTurn, chain?.length, local?.status, bot?.status, solo?.status, mode, local?.turnId]);
+
+  useEffect(() => { if (seconds === 0 && !busy && mode !== "online") handleTimeout(); }, [seconds]);
+
+  useEffect(() => {
+    if (mode !== "chrono" || solo?.status !== "playing" || !solo?.endsAt) { setChronoLeft(null); return; }
+    const tick = () => { const left = Math.max(0, Math.round((solo.endsAt - Date.now()) / 1000)); setChronoLeft(left); if (left <= 0) setSolo((g) => (g && g.status === "playing" ? { ...g, status: "over", reason: "temps écoulé" } : g)); };
+    tick();
+    const iv = setInterval(tick, 250);
+    return () => clearInterval(iv);
+  }, [mode, solo?.status, solo?.endsAt]);
+
+  useEffect(() => {
+    if (mode !== "bot" || !bot || bot.status !== "playing" || bot.turn !== "bot") return;
+    if (botRunning.current) return;
+    botRunning.current = true;
+    (async () => {
+      const last = bot.chain[bot.chain.length - 1].artist;
+      let pick = null;
+      try { pick = await botPick(last, bot.used); } catch (e) { pick = null; }
+      setBot((g) => {
+        if (!g || g.turn !== "bot") return g;
+        if (!pick) return { ...g, status: "over", winner: "human", reason: "le bot sèche — il ne trouve plus de feat" };
+        return { ...g, chain: [...g.chain, { artist: pick.artist, track: pick.track, source: "MusicBrainz", by: "bot" }], used: [...g.used, norm(pick.artist)], turn: "human" };
+      });
+      botRunning.current = false;
+    })();
+  }, [mode, bot]);
+
+  useEffect(() => {
+    if (!isSoloLike(mode) || solo?.status !== "over") return;
+    const kind = mode === "chrono" ? "chrono" : mode === "solo" ? "solo" : null;
+    if (!kind) return;
+    const score = scoreOf(solo, mode);
+    if (score > (bests[kind] || 0)) { setBests((b) => ({ ...b, [kind]: score })); setSoloRecord(true); saveBest(kind, score); }
+  }, [solo?.status]);
+
+  function scoreOf(g, m) { if (!g) return 0; return m === "daily" ? Math.max(0, g.chain.length - 1) : g.chain.length; }
+
+  /* ----- démarrages solo/local/bot ----- */
+  function startLocal() {
+    const ps = names.map((n, i) => ({ id: "p" + i + Math.random().toString(36).slice(2, 6), name: (n || "").trim() || `Joueur ${i + 1}`, alive: true, wins: 0 }));
+    const order = ps.map((p) => p.id);
+    setLocal({ players: ps, order, roundsToWin, round: 1, chain: [], used: [], turnId: order[0], status: "playing", roundWinner: null, matchWinner: null, reason: "" });
+    setMode("local"); setScreen("game");
+  }
+  function startBot() { setBot({ chain: [], used: [], turn: "human", status: "playing", winner: null, reason: "" }); setMode("bot"); setScreen("game"); }
+  function startSolo() { setSolo({ chain: [], used: [], status: "playing", reason: "", endsAt: null }); setSoloRecord(false); setMode("solo"); setScreen("game"); }
+  function startChrono() { setSolo({ chain: [], used: [], status: "playing", reason: "", endsAt: Date.now() + CHRONO_SECONDS * 1000 }); setSoloRecord(false); setMode("chrono"); setScreen("game"); }
+  function startDaily() { const a = dailyArtist(); setSolo({ chain: [{ artist: a, track: null, by: "human", given: true }], used: [norm(a)], status: "playing", reason: "", endsAt: null, startArtist: a }); setSoloRecord(false); setMode("daily"); setScreen("game"); }
+
+  function eliminateLocal(g, who, reason) { return eliminateGame(g, who, reason); }
+  function nextRoundLocal() {
+    setLocal((g) => ({ ...g, status: "playing", round: g.round + 1, chain: [], used: [], players: g.players.map((p) => ({ ...p, alive: true })), turnId: g.roundWinner || g.order[0], roundWinner: null, reason: "" }));
+  }
+
+  async function submit() {
+    const name = input.trim();
+    if (!name || busy) return;
+    setErr(""); setFlash("");
+
+    if (mode === "online") {
+      if (!isMyTurnOnline) return;
+      setInput("");
+      if (netRef.current.role === "host") { setBusy(true); await hostProcessMove(netRef.current.myId, name); setBusy(false); }
+      else {
+        const c = netRef.current.client;
+        try { c.publish(TOPIC(netRef.current.code) + "/act", JSON.stringify({ type: "move", id: netRef.current.myId, name }), { qos: 0 }); }
+        catch (e) { setErr("Connexion perdue, réessaie."); }
+      }
+      return;
+    }
+
+    if (mode === "local") {
+      if (local.status !== "playing") return;
+      setBusy(true);
+      const opening = local.chain.length === 0;
+      let next;
+      if (opening) next = { ...local, chain: [{ artist: name, by: local.turnId }], used: [norm(name)], turnId: nextAliveId(local.order, local.players, local.turnId) };
+      else if (local.used.includes(norm(name))) next = eliminateLocal(local, local.turnId, `${name} a déjà été cité`);
+      else {
+        const last = local.chain[local.chain.length - 1].artist;
+        const v = await verifyFeat(last, name);
+        if (!v.ok) { setErr("MusicBrainz indisponible, réessaie."); setBusy(false); return; }
+        if (!v.valid) next = eliminateLocal(local, local.turnId, `pas de feat entre ${last} et ${name}`);
+        else next = { ...local, chain: [...local.chain, { artist: name, track: v.track, source: v.source, by: local.turnId }], used: [...local.used, norm(name)], turnId: nextAliveId(local.order, local.players, local.turnId) };
+      }
+      setLocal(next); setBusy(false); setInput("");
+      return;
+    }
+
+    if (isSoloLike(mode)) {
+      if (!isHumanTurnSolo) return;
+      setBusy(true);
+      const opening = solo.chain.length === 0;
+      if (opening) { setSolo((g) => ({ ...g, chain: [{ artist: name, by: "human" }], used: [norm(name)] })); setBusy(false); setInput(""); return; }
+      const last = solo.chain[solo.chain.length - 1].artist;
+      if (solo.used.includes(norm(name))) {
+        if (mode === "chrono") { setFlash(`${name} déjà cité`); setBusy(false); return; }
+        setSolo((g) => ({ ...g, status: "over", reason: `${name} a déjà été cité` })); setBusy(false); setInput(""); return;
+      }
+      const v = await verifyFeat(last, name);
+      if (!v.ok) { setErr("MusicBrainz indisponible, réessaie."); setBusy(false); return; }
+      if (!v.valid) { if (mode === "chrono") { setFlash(`✗ pas de feat avec ${last}`); setBusy(false); return; } setSolo((g) => ({ ...g, status: "over", reason: `pas de feat entre ${last} et ${name}` })); }
+      else setSolo((g) => ({ ...g, chain: [...g.chain, { artist: name, track: v.track, source: v.source, by: "human" }], used: [...g.used, norm(name)] }));
+      setBusy(false); setInput("");
+      return;
+    }
+
+    // bot
+    if (!isHumanTurnBot) return;
+    setBusy(true);
+    const opening = bot.chain.length === 0;
+    if (opening) { setBot((g) => ({ ...g, chain: [{ artist: name, by: "human" }], used: [norm(name)], turn: "bot" })); setBusy(false); setInput(""); return; }
+    if (bot.used.includes(norm(name))) { setBot((g) => ({ ...g, status: "over", winner: "bot", reason: `${name} a déjà été cité` })); setBusy(false); setInput(""); return; }
+    const last = bot.chain[bot.chain.length - 1].artist;
+    const v = await verifyFeat(last, name);
+    if (!v.ok) { setErr("MusicBrainz indisponible, réessaie."); setBusy(false); return; }
+    if (!v.valid) setBot((g) => ({ ...g, status: "over", winner: "bot", reason: `pas de feat entre ${last} et ${name}` }));
+    else setBot((g) => ({ ...g, chain: [...g.chain, { artist: name, track: v.track, source: v.source, by: "human" }], used: [...g.used, norm(name)], turn: "bot" }));
+    setBusy(false); setInput("");
+  }
+
+  function handleTimeout() {
+    if (mode === "local") setLocal((g) => (g && g.status === "playing" ? eliminateLocal(g, g.turnId, "temps écoulé — a séché") : g));
+    else if (mode === "bot") setBot((g) => (g && g.turn === "human" && g.status === "playing" ? { ...g, status: "over", winner: "bot", reason: "temps écoulé — tu as séché" } : g));
+    else if (mode === "solo" || mode === "daily") setSolo((g) => (g && g.status === "playing" ? { ...g, status: "over", reason: "temps écoulé — tu as séché" } : g));
+  }
+
+  function reset() {
+    cleanupNet();
+    setScreen("home"); setMode(null); setLocal(null); setBot(null); setSolo(null); setRoom(null);
+    setSoloRecord(false); setInput(""); setErr(""); setFlash(""); setSeconds(null); setChronoLeft(null);
+    setNames(["", ""]); setRoundsToWin(3); setJoinCode(""); setLobbyErr(""); setNetStatus("");
+  }
+
+  /* ----- affichage ----- */
+  function playersOf() { return mode === "online" ? room?.players || [] : local?.players || []; }
+  function nameById(id) { return playersOf().find((p) => p.id === id)?.name || "?"; }
+  function labelFor(by) {
+    if (mode === "bot") return by === "bot" ? "Bot" : "Toi";
+    if (isSoloLike(mode)) return "Toi";
+    if (mode === "online") return by === netRef.current.myId ? "Toi" : nameById(by);
+    if (mode === "local") return nameById(by);
+    return "";
+  }
+  const isMine = (by) => (mode === "bot" || isSoloLike(mode)) ? by === "human" : mode === "online" ? by === netRef.current.myId : false;
+
+  const lastArtist = chain && chain.length ? chain[chain.length - 1].artist : null;
+  const isHost = mode === "online" && room && room.hostId === netRef.current.myId;
+
+  return (
+    <div className="fc-shell">
+      <header className="fc-head">
+        <button className="fc-brand" onClick={reset}><span className="fc-brand-mark">feat.</span><span className="fc-brand-sub">la chaîne</span></button>
+        {screen === "home" ? <button className="fc-quit" onClick={() => setScreen("board")}>Classement</button> : <button className="fc-quit" onClick={reset}>{screen === "board" ? "Fermer" : "Quitter"}</button>}
+      </header>
+
+      {screen === "home" && (
+        <Home goOnline={() => { setMode("online"); setRoom(null); setScreen("onlobby"); }} goSetup={() => { setMode("local"); setScreen("setup"); }} startBot={startBot} startSolo={startSolo} startChrono={startChrono} startDaily={startDaily} bests={bests} />
+      )}
+
+      {screen === "setup" && <Setup names={names} setNames={setNames} roundsToWin={roundsToWin} setRoundsToWin={setRoundsToWin} startLocal={startLocal} reset={reset} />}
+
+      {screen === "onlobby" && (
+        <OnlineLobby room={room} isHost={isHost} myId={netRef.current.myId} onlineName={onlineName} setOnlineName={setOnlineName}
+          joinCode={joinCode} setJoinCode={setJoinCode} roundsToWin={roundsToWin} setRoundsToWin={setRoundsToWin}
+          lobbyErr={lobbyErr} netStatus={netStatus} createOnline={createOnline} joinOnline={joinOnline} startMatchOnline={startMatchOnline} reset={reset} />
+      )}
+
+      {screen === "board" && <Board />}
+
+      {screen === "game" && (
+        <main className="fc-game">
+          <StatusBar mode={mode} room={room} local={local} bot={bot} solo={solo} bests={bests} seconds={seconds} chronoLeft={chronoLeft} myTurn={myTurn} myId={netRef.current.myId} nameById={nameById} scoreOf={scoreOf} />
+
+          {(mode === "local" || mode === "online") && <Scoreboard players={playersOf()} turnId={mode === "online" ? room?.turnId : local?.turnId} status={mode === "online" ? room?.status : local?.status} myId={netRef.current.myId} />}
+
+          <div className="fc-chain">
+            {(!chain || chain.length === 0) && <p className="fc-empty">Lance la chaîne avec n'importe quel artiste.</p>}
+            {chain?.map((link, i) => (
+              <div className="fc-link-wrap" key={i}>
+                {i > 0 && (<div className="fc-connector"><span className="fc-feat">feat.</span><span className="fc-track">{link.track || "morceau vérifié"}</span>{link.source && <span className="fc-src">{link.source}</span>}</div>)}
+                <div className={"fc-link" + (i === chain.length - 1 ? " fc-link-latest" : "") + (isMine(link.by) ? " fc-link-mine" : "") + (link.given ? " fc-link-given" : "")}>
+                  <span className="fc-link-who">{link.given ? "départ" : labelFor(link.by)}</span>
+                  <span className="fc-link-artist">{link.artist}</span>
+                </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          {mode === "bot" && bot?.turn === "bot" && bot?.status === "playing" && (<div className="fc-thinking"><span className="fc-dot" /><span className="fc-dot" /><span className="fc-dot" /><span>le bot cherche un feat…</span></div>)}
+          {mode === "online" && busy && isHost && (<div className="fc-thinking"><span className="fc-dot" /><span className="fc-dot" /><span className="fc-dot" /><span>vérification dans MusicBrainz…</span></div>)}
+
+          {((mode === "online" && room?.status === "playing") || (mode === "local" && local?.status === "playing") || (mode === "bot" && bot?.status === "playing") || (isSoloLike(mode) && solo?.status === "playing")) && (
+            <div className="fc-input-area">
+              <div className="fc-prompt">
+                {lastArtist ? `Un artiste qui a featé avec ${lastArtist}` : "Ouvre la chaîne avec un artiste"}
+                {mode === "local" && <span> · au tour de <strong>{nameById(local.turnId)}</strong></span>}
+                {mode === "online" && !isMyTurnOnline && <span> · au tour de <strong>{nameById(room.turnId)}</strong></span>}
+              </div>
+              <div className="fc-input-row">
+                <input className="fc-input fc-input-main" value={input} disabled={!myTurn || busy} placeholder={myTurn ? "Nom de l'artiste…" : "En attente…"} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+                <button className="fc-btn fc-btn-primary" disabled={!myTurn || busy || !input.trim()} onClick={submit}>{busy ? "…" : "Envoyer"}</button>
+              </div>
+              {flash && <p className="fc-flash">{flash}</p>}
+              {err && <p className="fc-err">{err}</p>}
+            </div>
+          )}
+
+          {mode === "local" && (local?.status === "roundover" || local?.status === "matchover") && (<RoundResult g={local} canAdvance={true} onNext={nextRoundLocal} reset={reset} />)}
+          {mode === "online" && (room?.status === "roundover" || room?.status === "matchover") && (<RoundResult g={room} myId={netRef.current.myId} canAdvance={isHost} onNext={nextRoundOnline} reset={reset} online={true} />)}
+
+          {((mode === "bot" && bot?.status === "over") || (isSoloLike(mode) && solo?.status === "over")) && (<SoloResult mode={mode} bot={bot} solo={solo} bests={bests} soloRecord={soloRecord} scoreOf={scoreOf} reset={reset} />)}
+        </main>
+      )}
+    </div>
+  );
+}
+
+function Home({ goOnline, goSetup, startBot, startSolo, startChrono, startDaily, bests }) {
+  return (
+    <main className="fc-home">
+      <h1 className="fc-title">Enchaîne les artistes<br />par leurs <em>featurings</em>.</h1>
+      <ol className="fc-rules">
+        <li><span className="fc-rn">01</span> À tour de rôle, nomme un artiste qui a fait un feat avec le précédent.</li>
+        <li><span className="fc-rn">02</span> Chaque coup est vérifié dans MusicBrainz, qui cite le morceau.</li>
+        <li><span className="fc-rn">03</span> Sécher, se répéter ou se tromper t'élimine.</li>
+      </ol>
+      <p className="fc-section-label">En ligne</p>
+      <button className="fc-btn fc-btn-primary fc-block" onClick={goOnline}>Partie en ligne — 2 à 6 joueurs</button>
+      <p className="fc-section-label">Sur un même écran</p>
+      <button className="fc-btn fc-btn-dark fc-block" onClick={goSetup}>Partie locale (pass-and-play)</button>
+      <p className="fc-section-label">En solo</p>
+      <div className="fc-grid">
+        <button className="fc-tile" onClick={startSolo}><span className="fc-tile-t">Survie</span><span className="fc-tile-d">la plus longue chaîne</span>{bests.solo > 0 && <span className="fc-tile-best">record {bests.solo}</span>}</button>
+        <button className="fc-tile" onClick={startChrono}><span className="fc-tile-t">Chrono 2 min</span><span className="fc-tile-d">un max de maillons</span>{bests.chrono > 0 && <span className="fc-tile-best">record {bests.chrono}</span>}</button>
+        <button className="fc-tile" onClick={startDaily}><span className="fc-tile-t">Défi du jour</span><span className="fc-tile-d">départ imposé : {dailyArtist()}</span></button>
+        <button className="fc-tile" onClick={startBot}><span className="fc-tile-t">Contre le bot</span><span className="fc-tile-d">il pioche dans MusicBrainz</span></button>
+      </div>
+      <p className="fc-note">En ligne = via un serveur relais public (MQTT), sans compte : marche sur la plupart des réseaux. Vérification via MusicBrainz. Records et classement enregistrés sur cet appareil.</p>
+    </main>
+  );
+}
+
+function OnlineLobby({ room, isHost, myId, onlineName, setOnlineName, joinCode, setJoinCode, roundsToWin, setRoundsToWin, lobbyErr, netStatus, createOnline, joinOnline, startMatchOnline, reset }) {
+  if (room && room.status === "lobby") {
+    return (
+      <main className="fc-lobby">
+        <p className="fc-wait-label">Salon ouvert — partage ce code</p>
+        <div className="fc-bigcode">{room.code}</div>
+        <div className="fc-players">
+          {room.players.map((p) => (
+            <div className="fc-prow" key={p.id}><span className="fc-pname">{p.name}</span><span className="fc-ptags">{p.id === room.hostId && <em>hôte</em>}{p.id === myId && <em>toi</em>}</span></div>
+          ))}
+        </div>
+        <p className="fc-meta">Premier à {room.roundsToWin} manche{room.roundsToWin > 1 ? "s" : ""} · {room.players.length}/{MAX_PLAYERS} joueurs</p>
+        {isHost ? (
+          <button className="fc-btn fc-btn-primary fc-block" disabled={room.players.length < 2} onClick={startMatchOnline}>{room.players.length < 2 ? "En attente de joueurs…" : "Lancer la partie"}</button>
+        ) : (<p className="fc-wait-sub">En attente du lancement par l'hôte…</p>)}
+        <button className="fc-back" onClick={reset}>← Quitter le salon</button>
+      </main>
+    );
+  }
+  if (netStatus === "connecting" && !room) {
+    return (<main className="fc-lobby"><p className="fc-wait-sub">Connexion au réseau…</p><button className="fc-back" onClick={reset}>← Annuler</button></main>);
+  }
+  return (
+    <main className="fc-lobby">
+      <label className="fc-field"><span>Ton pseudo</span><input className="fc-input" value={onlineName} maxLength={18} placeholder="ex. Maxandre" onChange={(e) => setOnlineName(e.target.value)} /></label>
+      <div className="fc-field"><span>Manches à gagner</span><div className="fc-segment">{[1, 3, 5].map((n) => <button key={n} className={"fc-seg" + (roundsToWin === n ? " fc-seg-on" : "")} onClick={() => setRoundsToWin(n)}>{n}</button>)}</div></div>
+      <button className="fc-btn fc-btn-primary fc-block" onClick={() => createOnline(0)}>Créer une partie</button>
+      <div className="fc-or"><span>ou rejoindre</span></div>
+      <div className="fc-join">
+        <input className="fc-input fc-code-input" value={joinCode} maxLength={5} placeholder="CODE" onChange={(e) => setJoinCode(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && joinOnline()} />
+        <button className="fc-btn fc-btn-dark" onClick={joinOnline}>Rejoindre</button>
+      </div>
+      {lobbyErr && <p className="fc-err">{lobbyErr}</p>}
+      <button className="fc-back" onClick={reset}>← Retour</button>
+    </main>
+  );
+}
+
+function Setup({ names, setNames, roundsToWin, setRoundsToWin, startLocal, reset }) {
+  const setName = (i, v) => setNames(names.map((n, k) => (k === i ? v : n)));
+  const add = () => names.length < MAX_PLAYERS && setNames([...names, ""]);
+  const remove = (i) => names.length > 2 && setNames(names.filter((_, k) => k !== i));
+  return (
+    <main className="fc-lobby">
+      <div className="fc-field">
+        <span>Joueurs ({names.length})</span>
+        {names.map((n, i) => (<div className="fc-prow-edit" key={i}><input className="fc-input" value={n} maxLength={18} placeholder={`Joueur ${i + 1}`} onChange={(e) => setName(i, e.target.value)} />{names.length > 2 && <button className="fc-iconbtn" onClick={() => remove(i)}>−</button>}</div>))}
+        {names.length < MAX_PLAYERS && <button className="fc-iconbtn" style={{ width: "100%" }} onClick={add}>+ ajouter un joueur</button>}
+      </div>
+      <div className="fc-field"><span>Manches à gagner</span><div className="fc-segment">{[1, 3, 5].map((n) => <button key={n} className={"fc-seg" + (roundsToWin === n ? " fc-seg-on" : "")} onClick={() => setRoundsToWin(n)}>{n}</button>)}</div></div>
+      <button className="fc-btn fc-btn-primary fc-block" onClick={startLocal}>Lancer la partie</button>
+      <button className="fc-back" onClick={reset}>← Retour</button>
+    </main>
+  );
+}
+
+function StatusBar({ mode, room, local, bot, solo, bests, seconds, chronoLeft, myTurn, myId, nameById, scoreOf }) {
+  let left = "", right = "";
+  if (mode === "online" && room) {
+    left = `salon ${room.code} · manche ${room.round}`;
+    if (room.status === "playing") right = room.turnId === myId ? "À toi de jouer" : `Au tour de ${nameById(room.turnId)}`;
+  } else if (mode === "local" && local) {
+    left = `local · manche ${local.round}`;
+    if (local.status === "playing") right = `Au tour de ${nameById(local.turnId)}`;
+  } else if (mode === "bot" && bot) {
+    left = "contre le bot";
+    if (bot.status === "playing") right = myTurn ? "À toi de jouer" : "Au bot";
+  } else if (isSoloLike(mode) && solo) {
+    const n = scoreOf(solo, mode);
+    left = mode === "chrono" ? (bests.chrono > 0 ? `chrono · record ${bests.chrono}` : "chrono") : mode === "daily" ? "défi du jour" : (bests.solo > 0 ? `survie · record ${bests.solo}` : "survie");
+    right = `${n} maillon${n > 1 ? "s" : ""}`;
+  }
+  let timer = null;
+  if (mode === "chrono" && chronoLeft !== null) { const m = Math.floor(chronoLeft / 60), s = chronoLeft % 60; timer = <span className={"fc-timer" + (chronoLeft <= 15 ? " fc-timer-low" : "")}>{m}:{String(s).padStart(2, "0")}</span>; }
+  else if (seconds !== null) timer = <span className={"fc-timer" + (seconds <= 10 ? " fc-timer-low" : "")}>{String(Math.max(seconds, 0)).padStart(2, "0")}s</span>;
+  const mineHi = (mode === "bot" && myTurn) || (mode === "online" && room?.turnId === myId);
+  return (<div className="fc-statusbar"><span className="fc-status-left">{left}</span>{right && <span className={"fc-turn" + (mineHi ? " fc-turn-mine" : "")}>{right}</span>}{timer}</div>);
+}
+
+function Scoreboard({ players, turnId, status, myId }) {
+  return (
+    <div className="fc-scoreboard">
+      {players.map((p) => (
+        <div key={p.id} className={"fc-chip" + (p.id === turnId && status === "playing" ? " fc-chip-active" : "") + (!p.alive ? " fc-chip-out" : "")}>
+          <span className="fc-chip-name">{p.name}{p.id === myId ? " (toi)" : ""}</span><span className="fc-chip-wins">{"●".repeat(p.wins) || "○"}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RoundResult({ g, myId, canAdvance, onNext, reset, online }) {
+  const winnerName = g.players.find((p) => p.id === g.roundWinner)?.name || "—";
+  if (g.status === "matchover") {
+    const ranked = [...g.players].sort((a, b) => b.wins - a.wins);
+    const iWon = online && g.matchWinner === myId;
+    return (
+      <div className={"fc-result " + (online ? (iWon ? "fc-result-win" : "fc-result-lose") : "fc-result-win")}>
+        <div className="fc-result-tag">{online ? (iWon ? "★" : "—") : "★"}</div>
+        <h2 className="fc-result-h">{online && iWon ? "Tu remportes la partie" : `${winnerName} remporte la partie`}</h2>
+        <div className="fc-standings">{ranked.map((p, i) => (<div className="fc-srow" key={p.id}><span className="fc-srank">{i + 1}</span><span className="fc-sname">{p.name}{online && p.id === myId ? " (toi)" : ""}</span><span className="fc-swins">{p.wins} manche{p.wins > 1 ? "s" : ""}</span></div>))}</div>
+        <button className="fc-btn fc-btn-primary" onClick={reset}>Retour à l'accueil</button>
+      </div>
+    );
+  }
+  return (
+    <div className="fc-result">
+      <h2 className="fc-result-h">Manche {g.round} : {winnerName} l'emporte</h2>
+      <p className="fc-result-reason">{g.reason}</p>
+      <div className="fc-standings">{[...g.players].sort((a, b) => b.wins - a.wins).map((p) => (<div className="fc-srow" key={p.id}><span className="fc-sname">{p.name}{online && p.id === myId ? " (toi)" : ""}</span><span className="fc-swins">{p.wins}/{g.roundsToWin}</span></div>))}</div>
+      {canAdvance ? <button className="fc-btn fc-btn-primary" onClick={onNext}>Manche suivante</button> : <p className="fc-wait-sub">En attente de l'hôte pour la manche suivante…</p>}
+    </div>
+  );
+}
+
+function SoloResult({ mode, bot, solo, bests, soloRecord, scoreOf, reset }) {
+  const [published, setPublished] = useState(false);
+  const [nameInput, setNameInput] = useState(lsGet("feat-myname", ""));
+  if (mode === "bot") {
+    const iWon = bot.winner === "human";
+    return (<div className={"fc-result " + (iWon ? "fc-result-win" : "fc-result-lose")}><div className="fc-result-tag">{iWon ? "★" : "—"}</div><h2 className="fc-result-h">{iWon ? "Gagné" : "Perdu"}</h2><p className="fc-result-reason">{bot.reason}</p><button className="fc-btn fc-btn-primary" onClick={reset}>Rejouer</button></div>);
+  }
+  const score = scoreOf(solo, mode);
+  const cat = mode === "chrono" ? "chrono" : mode === "daily" ? `daily:${todayKey()}` : "solo";
+  const catLabel = mode === "chrono" ? "Chrono" : mode === "daily" ? "Défi du jour" : "Survie";
+  function publish() { const nm = (nameInput || "Anonyme").trim().slice(0, 18); lsSet("feat-myname", nm); lbAdd(cat, { name: nm, score, ts: Date.now() }); setPublished(true); }
+  return (
+    <div className="fc-result fc-result-solo">
+      {soloRecord && <div className="fc-record">★ Nouveau record</div>}
+      <div className="fc-result-score">{score}</div>
+      <p className="fc-result-scorelabel">{mode === "daily" ? "artistes ajoutés" : `artiste${score > 1 ? "s" : ""} enchaîné${score > 1 ? "s" : ""}`}</p>
+      <p className="fc-result-reason">{solo.reason}</p>
+      {!published ? (<div className="fc-publish"><input className="fc-input" value={nameInput} maxLength={18} placeholder="Ton pseudo" onChange={(e) => setNameInput(e.target.value)} /><button className="fc-btn fc-btn-dark" disabled={score === 0} onClick={publish}>Enregistrer au classement {catLabel}</button></div>) : (<p className="fc-published">Score enregistré ✓</p>)}
+      <button className="fc-btn fc-btn-primary" onClick={reset}>Rejouer</button>
+    </div>
+  );
+}
+
+function Board() {
+  const tabs = [{ id: "solo", label: "Survie" }, { id: "chrono", label: "Chrono" }, { id: `daily:${todayKey()}`, label: "Défi du jour" }];
+  const [tab, setTab] = useState("solo");
+  const rows = lbGet(tab);
+  return (
+    <main className="fc-board">
+      <h2 className="fc-board-h">Classement</h2>
+      <div className="fc-tabs">{tabs.map((t) => <button key={t.id} className={"fc-tab" + (tab === t.id ? " fc-tab-on" : "")} onClick={() => setTab(t.id)}>{t.label}</button>)}</div>
+      {rows.length === 0 ? <p className="fc-empty">Aucun score enregistré. Sois le premier.</p> : (<div className="fc-lb">{rows.map((r, i) => (<div className={"fc-lbrow" + (i < 3 ? " fc-lbrow-top" : "")} key={i}><span className="fc-lbrank">{i + 1}</span><span className="fc-lbname">{r.name}</span><span className="fc-lbscore">{r.score}</span></div>))}</div>)}
+      <p className="fc-note">Classement local à cet appareil. Le défi du jour se réinitialise chaque jour.</p>
+    </main>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
